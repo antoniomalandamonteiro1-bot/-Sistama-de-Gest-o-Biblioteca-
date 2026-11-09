@@ -1,15 +1,13 @@
 from datetime import datetime, timedelta
 
-# ==========================================
-# 1. CLASSE ABSTRATA PESSOA
-# ==========================================
+
 class Pessoa:
     def __init__(self, id_pessoa: int, nome: str, email: str):
         self.__id = id_pessoa
         self.__nome = nome
         self.__email = email
 
-    # Getters e Setters (Encapsulamento)
+    
     def get_id(self) -> int:
         return self.__id
 
@@ -20,14 +18,12 @@ class Pessoa:
         return self.__email
 
     def autenticar(self) -> bool:
-        # Simulação de autenticação simples
+       
         print(f"Utilizador {self.__nome} autenticado com sucesso.")
         return True
 
 
-# ==========================================
-# 2. CLASSE LEITOR (Herança de Pessoa)
-# ==========================================
+
 class Leitor(Pessoa):
     def __init__(self, id_pessoa: int, nome: str, email: str, numero_leitor: str):
         super().__init__(id_pessoa, nome, email)
@@ -46,9 +42,7 @@ class Leitor(Pessoa):
         return Reserva(self, livro)
 
 
-# ==========================================
-# 3. CLASSE BIBLIOTECARIO (Herança de Pessoa)
-# ==========================================
+
 class Bibliotecario(Pessoa):
     def __init__(self, id_pessoa: int, nome: str, email: str, funcionario_id: str):
         super().__init__(id_pessoa, nome, email)
@@ -72,16 +66,14 @@ class Bibliotecario(Pessoa):
         print(f"[Devolução] Bibliotecário {self.get_nome()} registou a devolução do exemplar.")
 
 
-# ==========================================
-# 4. CLASSE LIVRO
-# ==========================================
+
 class Livro:
     def __init__(self, isbn: str, titulo: str, autor: str, categoria: str):
         self.__isbn = isbn
         self.__titulo = titulo
         self.__autor = autor
         self.__categoria = categoria
-        self.__exemplares = []  # Composição: Livro contém Exemplares
+        self.__exemplares = []  
 
     def get_isbn(self) -> str:
         return self.__isbn
@@ -99,16 +91,14 @@ class Livro:
         return False
 
 
-# ==========================================
-# 5. CLASSE EXEMPLAR (Composição com Livro)
-# ==========================================
+
 class Exemplar:
     def __init__(self, codigo: str, localizacao: str, livro: Livro):
         self.__codigo = codigo
-        self.__estado = "Disponível"  # Disponível, Emprestado, Danificado
+        self.__estado = "Disponível"  
         self.__localizacao = localizacao
         self.__livro = livro
-        livro.adicionar_exemplar(self)  # Ciclo de vida dependente/agregado ao livro
+        livro.adicionar_exemplar(self) 
 
     def get_codigo(self) -> str:
         return self.__codigo
@@ -126,9 +116,7 @@ class Exemplar:
         self.__estado = "Disponível"
 
 
-# ==========================================
-# 6. CLASSE EMPRESTIMO
-# ==========================================
+
 class Emprestimo:
     _contador_id = 1
 
@@ -154,9 +142,7 @@ class Emprestimo:
         self.__exemplar.marcar_disponivel()
 
 
-# ==========================================
-# 7. CLASSE RESERVA
-# ==========================================
+
 class Reserva:
     _contador_id = 1
 
@@ -177,36 +163,33 @@ class Reserva:
         print(f"Reserva {self.__id} confirmada.")
 
 
-# ==========================================
-# CENÁRIO DE TESTE / EXECUÇÃO PRÁTICA
-# ==========================================
+
 if __name__ == "__main__":
     print("--- SISTEMA DE GESTÃO DE BIBLIOTECA (DEMONSTRAÇÃO) ---")
 
-    # 1. Criar Livro e Exemplares (Composição)
     livro1 = Livro("978-989-123-456-7", "Engenharia de Software", "Ian Sommerville", "Tecnologia")
     exemplar1 = Exemplar("EX-001", "Estante A1", livro1)
     exemplar2 = Exemplar("EX-002", "Estante A1", livro1)
 
-    # 2. Criar Leitores e Bibliotecários (Herança)
+
     leitor1 = Leitor(1, "Ana Silva", "ana@email.com", "L-2026-001")
     bibliotecario1 = Bibliotecario(2, "Carlos Mello", "carlos@biblioteca.com", "B-998")
 
-    # 3. Autenticação
+ 
     leitor1.autenticar()
     bibliotecario1.autenticar()
 
-    # 4. Verificar Disponibilidade
+
     print(f"\nO livro '{livro1.get_titulo()}' está disponível? {'Sim' if livro1.consultar_disponibilidade() else 'Não'}")
 
-    # 5. Efectuar Empréstimo
+    
     emprestimo1 = leitor1.solicitar_emprestimo(exemplar1, bibliotecario1)
 
-    # 6. Tentar emprestar o mesmo exemplar esgotado
+    
     print("\nTentativa de re-emprestar o mesmo exemplar:")
     leitor1.solicitar_emprestimo(exemplar1, bibliotecario1)
 
-    # 7. Devolução do livro
+    
     if emprestimo1:
         print("\nProcesso de devolução:")
         bibliotecario1.registar_devolucao(emprestimo1)
